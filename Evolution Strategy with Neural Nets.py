@@ -16,8 +16,8 @@ LR = .05                    # learning rate
 SIGMA = .05                 # mutation strength or step size
 N_CORE = mp.cpu_count()-1
 
-Training = False
-SaveNet = False
+Training = True #False
+SaveNet = True
 LoadNet = True
 
 CONFIG = [
@@ -27,7 +27,7 @@ CONFIG = [
          n_feature=2, n_action=3, continuous_a=[False], ep_max_step=200, eval_threshold=-120),
     dict(game="Pendulum-v0",
          n_feature=3, n_action=1, continuous_a=[True, 2.], ep_max_step=200, eval_threshold=-980)
-][0]    # choose your game
+][1]    # choose your game
 
 
 def sign(k_id): return -1. if k_id % 2 == 0 else 1.  # mirrored sampling
@@ -142,19 +142,26 @@ if __name__ == "__main__":
 
     # Save data
     if SaveNet:
-        with open("net_shapes.txt", "wb") as fp:
+        file_shapes = CONFIG['game'] + "_shapes.txt"
+        file_params = CONFIG['game'] + "_params.txt"
+        with open(file_shapes, "wb") as fp:
             pickle.dump(net_shapes, fp)
-        with open("net_params.txt", "wb") as fp:
+        with open(file_params, "wb") as fp:
             pickle.dump(net_params, fp)
             fp.close()
 
     # Load data
     if LoadNet:
-        with open("net_shapes.txt", "rb") as fp:
-            net_shapes = pickle.load(fp)
-        with open("net_params.txt", "rb") as fp:
-            net_params = pickle.load(fp)
+        try:
+            file_shapes = CONFIG['game'] + "_shapes.txt"
+            file_params = CONFIG['game'] + "_params.txt"
+            with open(file_shapes, "rb") as fp:
+                net_shapes = pickle.load(fp)
+            with open(file_params, "rb") as fp:
+                net_params = pickle.load(fp)
             fp.close()
+        except:
+            print('No saved data was found')
 
     # test
     print("\nTESTING....")
