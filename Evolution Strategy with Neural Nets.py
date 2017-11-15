@@ -16,8 +16,8 @@ LR = .05                    # learning rate
 SIGMA = .05                 # mutation strength or step size
 N_CORE = mp.cpu_count()-1
 
-Training = True #False
-SaveNet = True
+Training = False
+SaveNet = False
 LoadNet = True
 
 CONFIG = [
